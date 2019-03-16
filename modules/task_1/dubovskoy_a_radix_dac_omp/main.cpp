@@ -1,37 +1,23 @@
 #include <iostream>
-
+#include "stdlib.h"
+#include <chrono>
 using namespace std;
 
-void radixsort(int *list, int n)
+/* Äëÿ qsort */
+int compare(const void * a, const void * b)
 {
-	int *bucket = new int[n];
-	int digpos = 1;
-	int max = list[0];
-
-	for (int i = 1; i < n; i++) {
-		if (list[i] > max)
-			max = list[i];
-	}
-
-	while (max / digpos > 0) {
-
-		int digit[10] = { 0 };
-
-		for (int i = 0; i < n; i++)
-			digit[(list[i] / digpos) % 10]++;
-
-		for (int i = 1; i < 10; i++)
-			digit[i] += digit[i - 1];
-
-		for (int i = n - 1; i >= 0; i--)
-			bucket[--digit[(list[i] / digpos) % 10]] = list[i];
-
-		for (int i = 0; i < n; i++)
-			list[i] = bucket[i];
-		digpos *= 10;
-	}
+	return (*(int*)a - *(int*)b);
 }
-
+int* get_randomized_array(int size, int s)
+{
+	int* array = new int[size];
+	int range = size;
+	for (int i = 0; i < size; i++)
+	{
+		array[i] = rand() % s + 1;
+	}
+	return array;
+}
 void print_array(int* array, int length)
 {
 	cout << " Array: ";
@@ -41,98 +27,151 @@ void print_array(int* array, int length)
 	}
 	cout << endl;
 }
+int get_max(int* a, int n)
+{
+	int max = a[0];
+	for (int i = 1; i < n; i++)
+	{
+		if (a[i] > max)
+			max = a[i];
+	}
+	return max;
+}
+int* get_num(int* a, int size, int rang)
+{
+	int *count = new int[rang];
+	for (int g = 0; g < rang; g++)
+	{
+		count[g] = 0;
+	}
+	for (int g = 0; g < rang; g++)
+	{
+		int r = 1;
+		for (int k = 0; k < g; k++)
+		{
+			r *= 10;
+		}
+		for (int j = 0; j < size; j++)
+		{
+			if (a[j] / r < 10 && a[j] / r > 0)
+			{
+				count[g]++;
+			}
+		}
+	}
 
-int* get_randomized_array(int size)
-{
-	int* array = new int[size];
-	int range = size;
-	for (int i = 0; i < size; i++)
-	{
-		array[i] = rand() % range + 1;
-	}
-	return array;
+	return count;
 }
-int* get_part_of_array(int* arr, int start_pos, int end_pos)
+void get_arr(int** arr, int* a, int size, int rang)
 {
-	int* part_arr = new int[end_pos - start_pos];
-	int j = 0;
-	for (int i = start_pos; i < end_pos; i++)
+	for (int g = 0; g < rang; g++)
 	{
-		part_arr[j] = arr[i];
-		j++;
-	}
-	return part_arr;
-}
-void sort(int* arr, int size, int counts)
-{
-	bool trg;
-	if ((size%counts) == 0)
-		trg = false;
-	else
-		trg = true;
-	int part = size / counts;
-	int** a = new int*[counts];
-	if (trg)
-	{
-		for (int i = 0; i < counts - 1; i++)
+		int r = 1;
+		for (int k = 0; k < g; k++)
 		{
-			a[i] = new int[part];
-			a[i] = get_part_of_array(arr, part*i, part*(i + 1));
-			radixsort(a[i], part);
-			for (int j = i * part; j < (i + 1)*part; j++)
+			r *= 10;
+		}
+		int N = 0;
+		for (int j = 0; j < size; j++)
+		{
+			if (a[j] / r < 10 && a[j] / r > 0)
 			{
-				arr[j] = a[i][j - i * part];
+				arr[g][N] = a[j];
+				N++;
 			}
 		}
-		a[counts - 1] = new int(part + size % counts);
-		a[counts - 1] = get_part_of_array(arr, part*(counts - 1), size);
-		radixsort(a[counts - 1], part + size % counts);
-		for (int j = (counts - 1) * part; j < size; j++)
-		{
-			arr[j] = a[counts - 1][j - (counts - 1) * part];
-		}
 	}
-	else
+}
+void sort(int** arr, int* count, int rang)
+{
+	for (int i = 0; i < rang; i++)
 	{
-		for (int i = 0; i < counts; i++)
-		{
-			a[i] = new int[part];
-			a[i] = get_part_of_array(arr, part*i, part*(i + 1));
-			radixsort(a[i], part);
-			for (int j = i * part; j < (i + 1)*part; j++)
-			{
-				arr[j] = a[i][j - i * part];
-			}
-		}
+		qsort(arr[i], count[i], sizeof(int), compare);
 	}
 }
 int main(int argc, char *argv[])
 {
+
 	int size = atoi(argv[1]);
-	int counts = atoi(argv[2]);
+	int s = atoi(argv[2]);
+	int *a = new int[size];
 
-	int* arr = new int[size];
-	arr = get_randomized_array(size);
+	a = get_randomized_array(size, s);
 	if (size < 20)
-		print_array(arr, size);
+		print_array(a, size);
 
-	sort(arr, size, counts);
+	int max = get_max(a, size);
+
+	if (max == 0)
+	{
+		cout << "Array = {0}";
+		return -1;
+	}
+
+
+	int rang = 0;
+	while (max > 0)
+	{
+		max /= 10;
+		rang++;
+	}
+	cout << "Max rang " << rang << endl;
+
+	int* count = new int[rang];
+	count = get_num(a, size, rang);
+	cout << "Rangs ";
+	print_array(count, rang);
+
+
+	int** arr;
+	arr = new int*[rang];
+	for (int i = 0; i < rang; i++)
+		arr[i] = new int[count[i]];
+	get_arr(arr, a, size, rang);
 
 	if (size < 20)
-		print_array(arr, size);
+	{
+		cout << "ARR:  ";
+		for (int i = 0; i < rang; i++)
+			for (int j = 0; j < count[i]; j++)
+			{
+				cout << arr[i][j] << " ";
+			}
+		cout << endl;
+	}
 
-	radixsort(arr, size);
+	sort(arr, count, rang);
 
 	if (size < 20)
-		print_array(arr, size);
+	{
+		cout << "SORTED ARR:  ";
+		for (int i = 0; i < rang; i++)
+			for (int j = 0; j < count[i]; j++)
+			{
+				cout << arr[i][j] << " ";
+			}
+		cout << endl;
+	}
+
+
+	int b = 0;
+	for (int i = 0; i < rang; i++)
+	{
+		for (int j = 0; j < count[i]; j++)
+		{
+
+			a[b + j] = arr[i][j];
+		}
+		b += count[i];
+	}
+
 	for (int i = 1; i < size; i++)
 	{
-		if (arr[i] < arr[i - 1])
+		if (a[i] < a[i - 1])
 		{
 			cout << "Array not sorted";
 			return -1;
 		}
 	}
-	cout << "Array sorted" << endl;
-
+	cout << "Array sorted" << endl;	
 }
