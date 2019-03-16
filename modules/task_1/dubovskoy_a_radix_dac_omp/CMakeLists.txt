@@ -1,4 +1,4 @@
-set(PROJECT_NAME "batova_d_qsort_merge_dac_omp")
+set(PROJECT_NAME "dubovskoy_a_radix_sort_dac_omp")
 
 if ( USE_OMP )
     project( ${PROJECT_NAME} )
