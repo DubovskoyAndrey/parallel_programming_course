@@ -136,4 +136,5 @@ int main(int argc, char *argv[]) {
     }
   }
   std::cout << "Array sorted" << std::endl;
+  return 0;
 }
