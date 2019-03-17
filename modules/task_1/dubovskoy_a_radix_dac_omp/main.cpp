@@ -79,8 +79,8 @@ void sorting(int** arr, int* count, int rang) {
   }
 }
 
-int main(int argc, char *argv[]) {
-  int size = atoi(argv[1]);;
+int main() {
+  int size = 16;
   int *a = new int[size];
   a = get_randomized_array(size);
   if (size < 20)
@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
   std::cout << "Max rang " << rang << std::endl;
   int* count = new int[rang];
   count = get_num(a, size, rang);
-  std::cout << "Count ";
+  std::cout << "Rangs ";
   print_array(count, rang);
   int** arr;
   arr = new int*[rang];
@@ -136,5 +136,4 @@ int main(int argc, char *argv[]) {
     }
   }
   std::cout << "Array sorted" << std::endl;
-  return 0;
 }
