@@ -80,7 +80,7 @@ void sorting(int** arr, int* count, int rang) {
 }
 
 int main() {
-  int size = 16;
+  int size = 12;
   int *a = new int[size];
   a = get_randomized_array(size);
   if (size < 20)
@@ -89,6 +89,12 @@ int main() {
   if (max == 0) {
     std::cout << "Array = {0}";
     return -1;
+  }
+  int num = 0;
+  for (int i = 0; i < size; i++) {
+    if (a[i] == 0) {
+      num++;
+    }
   }
   int rang = 0;
   while (max > 0) {
@@ -114,20 +120,17 @@ int main() {
     std::cout << std::endl;
   }
   sorting(arr, count, rang);
-  if (size < 20) {
-    std::cout << "SORTED ARR:  ";
-    for (int i = 0; i < rang; i++)
-      for (int j = 0; j < count[i]; j++) {
-        std::cout << arr[i][j] << " ";
-      }
-    std::cout << std::endl;
-  }
+
   int b = 0;
   for (int i = 0; i < rang; i++) {
     for (int j = 0; j < count[i]; j++) {
-      a[b + j] = arr[i][j];
+      a[num + b + j] = arr[i][j];
     }
     b += count[i];
+  }
+  if (size < 20) {
+    std::cout << "Sorted ";
+    print_array(a, size);
   }
   for (int i = 1; i < size; i++) {
     if (a[i] < a[i - 1]) {
