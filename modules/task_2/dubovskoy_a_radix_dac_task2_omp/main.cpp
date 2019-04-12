@@ -108,7 +108,6 @@ void dac_sort(unsigned int * array, int size, int threads) {
 
 
   for (int c = 0; c < counter; c++) {
-    unsigned int* temp = new unsigned int[piece * 2];
     if (c != 0) {
       piece = piece * 2;
     }
@@ -132,7 +131,6 @@ void dac_sort(unsigned int * array, int size, int threads) {
     for (int i = 0; i < size / piece / 2; i++) {
       unsigned int * tmp = new unsigned int[r1[i] - l1[i] + 1 + r2[i] - l2[i] + 1];
       tmp = Splitter(array + l1[i], array + l2[i], r1[i] - l1[i] + 1, r2[i] - l2[i] + 1);
-      int temp = 0;
       int j = l1[i], g = 0;
       while (j < r2[i] + 1) {
         array[j] = tmp[g++];
