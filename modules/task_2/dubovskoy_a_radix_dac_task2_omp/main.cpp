@@ -33,7 +33,7 @@ void copy_array(unsigned int* array1, unsigned int* array2, int size) {
 }
 
 void countSort(unsigned int* arr, int n, int exp) {
-  unsigned int *output = new unsigned int(n);
+  unsigned int *output = new unsigned int[n];
   int i;
   unsigned int count[10] = { 0 };
 
@@ -144,7 +144,7 @@ void dac_sort(unsigned int * array, int size, int threads) {
 
 
 int main() {
-  int size = 1000000, threads = 4;
+  int size = 10000123, threads = 4;
   std::cout << " Size = " << size << " Threads = " << threads << std::endl;
   double time1, time2;
   unsigned int *a = new unsigned int[size];
