@@ -103,7 +103,7 @@ void dac_sort(unsigned int * array, int size, int threads) {
   print_array(array, size);
 
 
-  int counter = std::log(threads) / std::log(2);
+  int counter = static_cast<int>(std::log(threads) / std::log(2));
   std::cout << "counter = " << counter << std::endl;
 
 
