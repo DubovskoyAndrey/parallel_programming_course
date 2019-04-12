@@ -14,7 +14,7 @@ int comp(const int *i, const int *j) {
 int* get_randomized_array(int size) {
   int* array = new int[size];
   std::default_random_engine generator;
-  std::uniform_int_distribution<int> distribution(0, 10000);
+  std::uniform_int_distribution<int> distribution(0, 100000);
   for (int i = 0; i < size; i++) {
     array[i] = distribution(generator);
   }
@@ -80,7 +80,7 @@ void sorting(int** arr, int* count, int rang) {
 }
 
 int main() {
-  int size = 12;
+  int size = 112300002;
   int *a = new int[size];
   a = get_randomized_array(size);
   if (size < 20)
@@ -122,6 +122,9 @@ int main() {
   sorting(arr, count, rang);
 
   int b = 0;
+  for (int i = 0; i < num; i++) {
+    a[i] = 0;
+  }
   for (int i = 0; i < rang; i++) {
     for (int j = 0; j < count[i]; j++) {
       a[num + b + j] = arr[i][j];
