@@ -17,7 +17,7 @@ unsigned int* get_randomized_array(int size) {
 }
 
 void print_array(unsigned int* array, int size) {
-  if (size > 20) {
+  if (size > 25) {
     return;
   }
   std::cout << " Array: ";
@@ -86,8 +86,28 @@ unsigned int * Splitter(unsigned int * arr1, unsigned int* arr2, int size1, int 
   }
   return tmp;
 }
+int BinSearch(unsigned int *mas, int l, int r, unsigned int x) {
+  if (l == r) return l;
+  if (l + 1 == r) {
+    if (x < mas[l]) return l;
+    else
+      return r;
+  }
+
+  int m = (l + r) / 2;
+  if (x < mas[m]) {
+    r = m;
+  } else {
+    if (x > mas[m]) l = m;
+    else
+      return m;
+  }
+
+  return BinSearch(mas, l, r, x);
+}
 
 void dac_sort(unsigned int * array, int size, int threads) {
+  omp_set_num_threads(threads);
   int * piece_mas = new int[threads];
   int piece = size / threads;
   int remainder = threads % size;
@@ -104,7 +124,7 @@ void dac_sort(unsigned int * array, int size, int threads) {
 
 
   int counter = static_cast<int>(std::log(threads) / std::log(2));
-  std::cout << "counter = " << counter << std::endl;
+  std::cout << " Counter = " << counter << std::endl;
 
 
   for (int c = 0; c < counter; c++) {
@@ -120,9 +140,9 @@ void dac_sort(unsigned int * array, int size, int threads) {
       l1[j] = j * piece * 2;
       r1[j] = j * piece * 2 + piece - 1;
       l2[j] = j * piece * 2 + piece;
-      r2[j] = j * piece * 2 + piece * 2 - 1;
+      r2[j] = BinSearch(array, l2[j], j * piece * 2 + piece * 2 - 1, array[r1[j]]);
     }
-    r2[size / piece / 2 - 1] = size - 1;
+    r2[size / piece / 2 - 1] = BinSearch(array, l2[size / piece / 2 - 1], size - 1, array[r1[size / piece / 2 - 1]]);
     for (int j = 0; j < size / piece / 2; j++) {
       std::cout << " l1 = " << l1[j] << " r1 = " << r1[j] << std::endl;
       std::cout << " l2 = " << l2[j] << " r2 = " << r2[j] << std::endl;
@@ -132,17 +152,19 @@ void dac_sort(unsigned int * array, int size, int threads) {
       unsigned int * tmp = new unsigned int[r1[i] - l1[i] + 1 + r2[i] - l2[i] + 1];
       tmp = Splitter(array + l1[i], array + l2[i], r1[i] - l1[i] + 1, r2[i] - l2[i] + 1);
       int j = l1[i], g = 0;
-      while (j < r2[i] + 1) {
+      while (j <= r2[i]) {
         array[j] = tmp[g++];
         j++;
       }
     }
+    print_array(array, size);
+    std::cout << std::endl;
   }
 }
 
 
 int main() {
-  int size = 10000123, threads = 4;
+  int size = 1000000, threads = 4;
   std::cout << " Size = " << size << " Threads = " << threads << std::endl;
   double time1, time2;
   unsigned int *a = new unsigned int[size];
@@ -156,7 +178,6 @@ int main() {
   time1 = omp_get_wtime();
   dac_sort(a, size, threads);
   time2 = omp_get_wtime();
-  std::cout << std::endl << std::endl;
   std::cout << std::endl << std::endl;
   print_array(a, size);
   std::cout << " Parralel time " << time2 - time1 << std::endl;
