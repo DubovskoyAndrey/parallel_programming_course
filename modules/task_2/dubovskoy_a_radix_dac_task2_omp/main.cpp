@@ -20,11 +20,11 @@ void print_array(unsigned int* array, int size) {
   if (size > 25) {
     return;
   }
-  std::cout << " Array: ";
+  printf(" Array: ");
   for (int i = 0; i < size; i++) {
-    std::cout << " " << array[i];
+    printf(" %lu", array[i]);
   }
-  std::cout << std::endl;
+  printf("\n");
 }
 void copy_array(unsigned int* array1, unsigned int* array2, int size) {
   for (int i = 0; i < size; i++) {
@@ -62,10 +62,10 @@ void radix_sort(unsigned int *arr, int n) {
 void check_result(unsigned int * array, int size) {
   for (int i = 1; i < size; i++)
     if (array[i] < array[i - 1]) {
-      std::cout << "Array not sorted" << std::endl;
+      printf("Array not sorted \n");
       return;
     }
-  std::cout << "Array sorted" << std::endl;
+  printf("Array sorted\n");
 }
 
 unsigned int * Splitter(unsigned int * arr1, unsigned int* arr2, int size1, int size2) {
@@ -124,14 +124,14 @@ void dac_sort(unsigned int * array, int size, int threads) {
 
 
   int counter = static_cast<int>(std::log(threads) / std::log(2));
-  std::cout << " Counter = " << counter << std::endl;
+  printf(" Counter = %d \n", counter);
 
 
   for (int c = 0; c < counter; c++) {
     if (c != 0) {
       piece = piece * 2;
     }
-    std::cout << " Piece = " << piece << std::endl;
+    printf(" Piece = %d \n", piece);
     int* r1 = new int[size / piece / 2];
     int* l1 = new int[size / piece / 2];
     int* r2 = new int[size / piece / 2];
@@ -144,8 +144,8 @@ void dac_sort(unsigned int * array, int size, int threads) {
     }
     r2[size / piece / 2 - 1] = BinSearch(array, l2[size / piece / 2 - 1], size - 1, array[r1[size / piece / 2 - 1]]);
     for (int j = 0; j < size / piece / 2; j++) {
-      std::cout << " l1 = " << l1[j] << " r1 = " << r1[j] << std::endl;
-      std::cout << " l2 = " << l2[j] << " r2 = " << r2[j] << std::endl;
+      printf(" l1 = %d r1 = %d \n", l1[j], r1[j]);
+      printf(" l2 = %d r2 = %d \n", l2[j], r2[j]);
     }
 #pragma omp parallel for schedule(dynamic, 1)
     for (int i = 0; i < size / piece / 2; i++) {
@@ -158,14 +158,14 @@ void dac_sort(unsigned int * array, int size, int threads) {
       }
     }
     print_array(array, size);
-    std::cout << std::endl;
+    printf("\n");
   }
 }
 
 
 int main() {
   int size = 20, threads = 4;
-  std::cout << " Size = " << size << " Threads = " << threads << std::endl;
+  printf( " Size = %d Threads = %d\n", size, threads);
   double time1, time2;
   unsigned int *a = new unsigned int[size];
   a = get_randomized_array(size);
@@ -173,21 +173,22 @@ int main() {
   copy_array(a, b, size);
   print_array(a, size);
 
-  std::cout << std::endl;
+  printf("\n\n");
 
   time1 = omp_get_wtime();
   dac_sort(a, size, threads);
   time2 = omp_get_wtime();
-  std::cout << std::endl;
+  printf("\n\n");
   print_array(a, size);
-  std::cout << " Parralel time " << time2 - time1 << std::endl;
+  printf(" Parralel time %f\n", time2 - time1);
   check_result(a, size);
-  std::cout << std::endl;
+  printf("\n\n");
 
   time1 = omp_get_wtime();
   radix_sort(b, size);
   time2 = omp_get_wtime();
   print_array(b, size);
-  std::cout << " Linear time " << time2 - time1 << std::endl;
+  printf(" Linear time %f\n", time2 - time1);
   check_result(b, size);
+  return 0;
 }
