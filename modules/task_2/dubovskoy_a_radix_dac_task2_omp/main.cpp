@@ -107,7 +107,6 @@ int BinSearch(unsigned int *mas, int l, int r, unsigned int x) {
 }
 
 void dac_sort(unsigned int * array, int size, int threads) {
-#pragma omp parallel num_threads(threads) {
   int * piece_mas = new int[threads];
   int piece = size / threads;
   int remainder = threads % size;
@@ -117,6 +116,7 @@ void dac_sort(unsigned int * array, int size, int threads) {
   if (size / threads != 0) {
     piece_mas[threads - 1] = piece_mas[threads - 1] + remainder;
   }
+#pragma omp parallel num_threads(threads)
 #pragma omp parallel for schedule(static, 1)
   for (int i = 0; i < threads; i++)
     radix_sort(array + i * piece, piece_mas[i]);
@@ -160,9 +160,7 @@ void dac_sort(unsigned int * array, int size, int threads) {
     print_array(array, size);
     printf("\n");
   }
-  }
-
-
+}
 int main() {
   int size = 20, threads = 4;
   printf(" Size = %d Threads = %d\n", size, threads);
