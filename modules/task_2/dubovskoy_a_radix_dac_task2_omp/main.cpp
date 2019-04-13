@@ -164,7 +164,7 @@ void dac_sort(unsigned int * array, int size, int threads) {
 
 
 int main() {
-  int size = 1000000, threads = 4;
+  int size = 20, threads = 4;
   std::cout << " Size = " << size << " Threads = " << threads << std::endl;
   double time1, time2;
   unsigned int *a = new unsigned int[size];
