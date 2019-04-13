@@ -165,7 +165,7 @@ void dac_sort(unsigned int * array, int size, int threads) {
 
 int main() {
   int size = 20, threads = 4;
-  printf( " Size = %d Threads = %d\n", size, threads);
+  printf(" Size = %d Threads = %d\n", size, threads);
   double time1, time2;
   unsigned int *a = new unsigned int[size];
   a = get_randomized_array(size);
