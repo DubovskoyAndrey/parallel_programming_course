@@ -173,16 +173,16 @@ int main() {
   copy_array(a, b, size);
   print_array(a, size);
 
-  std::cout << std::endl << std::endl;
+  std::cout << std::endl;
 
   time1 = omp_get_wtime();
   dac_sort(a, size, threads);
   time2 = omp_get_wtime();
-  std::cout << std::endl << std::endl;
+  std::cout << std::endl;
   print_array(a, size);
   std::cout << " Parralel time " << time2 - time1 << std::endl;
   check_result(a, size);
-  std::cout << std::endl << std::endl;
+  std::cout << std::endl;
 
   time1 = omp_get_wtime();
   radix_sort(b, size);
