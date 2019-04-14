@@ -149,7 +149,7 @@ void dac_sort(unsigned int * array, int size, int threads) {
       printf(" l1 = %d r1 = %d \n", l1[j], r1[j]);
       printf(" l2 = %d r2 = %d \n", l2[j], r2[j]);
     }
-    int tid;
+    int tid = 0;
 #pragma omp parallel for schedule(dynamic, 1) private(tid)
     for (int i = 0; i < size_j; i++) {
       tid = omp_get_thread_num();
