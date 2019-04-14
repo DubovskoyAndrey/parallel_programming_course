@@ -117,7 +117,7 @@ void dac_sort(unsigned int * array, int size, int threads) {
   if (size / threads != 0) {
     piece_mas[threads - 1] = piece_mas[threads - 1] + remainder;
   }
-#pragma omp parallel for schedule(dynamic, 1)
+#pragma omp parallel for schedule(static, 1)
   for (int i = 0; i < threads; i++)
     radix_sort(array + i * piece, piece_mas[i]);
   print_array(array, size);
@@ -126,30 +126,32 @@ void dac_sort(unsigned int * array, int size, int threads) {
   int counter = static_cast<int>(std::log(threads) / std::log(2));
   printf(" Counter = %d \n", counter);
 
-
+  int size_j = 0;
   for (int c = 0; c < counter; c++) {
     if (c != 0) {
       piece = piece * 2;
     }
+    size_j = static_cast<int>(threads / pow(2, c) / 2);
     printf(" Piece = %d \n", piece);
-    int* r1 = new int[size / piece / 2];
-    int* l1 = new int[size / piece / 2];
-    int* r2 = new int[size / piece / 2];
-    int* l2 = new int[size / piece / 2];
-    for (int j = 0; j < size / piece / 2; j++) {
+    printf(" size_j = %d \n", size_j);
+    int* r1 = new int[size_j];
+    int* l1 = new int[size_j];
+    int* r2 = new int[size_j];
+    int* l2 = new int[size_j];
+    for (int j = 0; j < size_j; j++) {
       l1[j] = j * piece * 2;
       r1[j] = j * piece * 2 + piece - 1;
       l2[j] = j * piece * 2 + piece;
       r2[j] = BinSearch(array, l2[j], j * piece * 2 + piece * 2 - 1, array[r1[j]]);
     }
-    r2[size / piece / 2 - 1] = BinSearch(array, l2[size / piece / 2 - 1], size - 1, array[r1[size / piece / 2 - 1]]);
-    for (int j = 0; j < size / piece / 2; j++) {
+    r2[size_j - 1] = BinSearch(array, l2[size_j - 1], size - 1, array[r1[size_j - 1]]);
+    for (int j = 0; j < size_j; j++) {
       printf(" l1 = %d r1 = %d \n", l1[j], r1[j]);
       printf(" l2 = %d r2 = %d \n", l2[j], r2[j]);
     }
     int tid;
-#pragma omp parallel for schedule(dynamic, 1) private(tid)
-    for (int i = 0; i < size / piece / 2; i++) {
+#pragma omp parallel for schedule(static, 1) private(tid)
+    for (int i = 0; i < size_j; i++) {
       tid = omp_get_thread_num();
       printf("Thread: %d \n", tid);
       unsigned int * tmp = new unsigned int[r1[i] - l1[i] + 1 + r2[i] - l2[i] + 1];
@@ -166,7 +168,7 @@ void dac_sort(unsigned int * array, int size, int threads) {
   }
 }
 int main() {
-  int size = 20, threads = 4;
+  int size = 2321513, threads = 8;
   printf(" Size = %d Threads = %d\n", size, threads);
   double time1, time2;
   unsigned int *a = new unsigned int[size];
@@ -192,5 +194,7 @@ int main() {
   print_array(b, size);
   printf(" Linear time %f\n", time2 - time1);
   check_result(b, size);
+  delete[] a;
+  delete[] b;
   return 0;
 }
