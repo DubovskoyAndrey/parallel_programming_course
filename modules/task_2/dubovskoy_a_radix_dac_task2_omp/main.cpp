@@ -117,7 +117,7 @@ void dac_sort(unsigned int * array, int size, int threads) {
   if (size / threads != 0) {
     piece_mas[threads - 1] = piece_mas[threads - 1] + remainder;
   }
-#pragma omp parallel for schedule(static, 1)
+#pragma omp parallel for schedule(dynamic, 1)
   for (int i = 0; i < threads; i++)
     radix_sort(array + i * piece, piece_mas[i]);
   print_array(array, size);
@@ -150,7 +150,7 @@ void dac_sort(unsigned int * array, int size, int threads) {
       printf(" l2 = %d r2 = %d \n", l2[j], r2[j]);
     }
     int tid;
-#pragma omp parallel for schedule(static, 1) private(tid)
+#pragma omp parallel for schedule(dynamic, 1) private(tid)
     for (int i = 0; i < size_j; i++) {
       tid = omp_get_thread_num();
       printf("Thread: %d \n", tid);
