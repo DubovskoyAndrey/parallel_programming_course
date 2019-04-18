@@ -119,6 +119,7 @@ void dac_sort(unsigned int * array, int size, int threads) {
   }
   printf("3\n");
   omp_set_num_threads(threads);
+  printf("%d\n", threads);
 #pragma omp parallel for schedule(dynamic, 1)
   for (int i = 0; i < threads; i++)
     radix_sort(array + i * piece, piece_mas[i]);
