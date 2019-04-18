@@ -124,7 +124,7 @@ void dac_sort(unsigned int * array, int size, int threads) {
     radix_sort(array + i * piece, piece_mas[i]);
   print_array(array, size);
 
-
+  printf("4\n");
   int counter = static_cast<int>(std::log(threads) / std::log(2));
   printf(" Counter = %d \n", counter);
 
