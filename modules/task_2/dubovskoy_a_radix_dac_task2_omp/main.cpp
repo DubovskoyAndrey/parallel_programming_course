@@ -124,7 +124,7 @@ void dac_sort(unsigned int * array, int size, int threads) {
   for (int i = 0; i < threads; i++) {
     printf("%d ", i);
     radix_sort(array + i * piece, piece_mas[i]);
-  } 
+  }
   print_array(array, size);
   printf("4\n");
 
