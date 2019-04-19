@@ -107,24 +107,24 @@ int BinSearch(unsigned int *mas, int l, int r, unsigned int x) {
 }
 
 void dac_sort(unsigned int * array, int size, int threads) {
-  printf("2\n");
+  printf("point 1\n");
   int * piece_mas = new int[threads];
   int piece = size / threads;
-  int remainder = threads % size;
+  int remainder = size % threads;
   for (int i = 0; i < threads; i++) {
     piece_mas[i] = size / threads;
   }
   if (size / threads != 0) {
     piece_mas[threads - 1] = piece_mas[threads - 1] + remainder;
   }
-  printf("3\n");
+  printf("point 2\n");
   omp_set_num_threads(threads);
-  printf("%d\n", threads);
 #pragma omp parallel for schedule(dynamic, 1)
   for (int i = 0; i < threads; i++)
     radix_sort(array + i * piece, piece_mas[i]);
+  printf("point 3\n");
   print_array(array, size);
-  printf("4\n");
+
 
   int counter = static_cast<int>(std::log(threads) / std::log(2));
   printf(" Counter = %d \n", counter);
@@ -171,7 +171,7 @@ void dac_sort(unsigned int * array, int size, int threads) {
   }
 }
 int main() {
-  int size = 2321513, threads = 8;
+  int size = 20, threads = 4;
   printf(" Size = %d Threads = %d\n", size, threads);
   double time1, time2;
   unsigned int *a = new unsigned int[size];
@@ -179,11 +179,9 @@ int main() {
   unsigned int *b = new unsigned int[size];
   copy_array(a, b, size);
   print_array(a, size);
-
   printf("\n\n");
 
   time1 = omp_get_wtime();
-  printf("1\n");
   dac_sort(a, size, threads);
   time2 = omp_get_wtime();
   printf("\n\n");
