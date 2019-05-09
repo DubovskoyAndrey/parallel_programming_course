@@ -153,7 +153,6 @@ void dac_sort(unsigned int * array, int size, int threads) {
       printf(" l1 = %d r1 = %d \n", l1[j], r1[j]);
       printf(" l2 = %d r2 = %d \n", l2[j], r2[j]);
     }
-    int tid = 0;
     init.initialize(size_j);
     tbb::parallel_for(tbb::blocked_range<int>(0, size_j), [=, &array](const tbb::blocked_range<int> &thrds) {
       for (int i = thrds.begin(); i != thrds.end(); i++) {
